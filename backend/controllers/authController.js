@@ -34,5 +34,35 @@ exports.registerController = async (req,res,next) => {
         next(err);
     }
 };
-exports.loginController = async () => {};
+
+// Login user
+exports.loginController = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        // validations
+        // Check if email and password fields are valid not empty
+        if(!email || !password) {
+            return next(new errorsResp('Please provide the valid email and/or password registered with us', 400));
+        }
+
+        // Check if user exists
+        const user = await userModel.findOne({email})
+        if (!user) {
+            return next(new errorsRes("Unrecognized user details provided", 401));
+        }
+
+        // check if provided password match with database password
+        const isMatch = await userModel.matchPassword(password)
+        if (!isMatch) {
+            return next(new errorsRes("Invalid credentials provided"));
+        }
+
+        // if all validations are passed
+        sendToken(user, 200, res);
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
 exports.logoutController = async () => {};
