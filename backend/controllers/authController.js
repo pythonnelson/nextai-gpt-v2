@@ -1,3 +1,4 @@
+const { response } = require("express");
 const userModel = require("../models/userModel");
 const errorsResp = require("../utils/errorsResp");
 
@@ -65,4 +66,12 @@ exports.loginController = async (req, res, next) => {
         next(err);
     }
 };
-exports.logoutController = async () => {};
+
+// Logout user
+exports.logoutController = async (req, res) => {
+    res.clearCookie('refreshToken')
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully, thanks for spending time with us."
+    })
+};
