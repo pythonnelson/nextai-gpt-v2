@@ -5,6 +5,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const colors = require("colors");
 const connectDb = require("./config/dbConnection");
+const errorHandler = require("./middleware/errorsMiddleware");
+
 // routes path
 const authRoutes = require("./routes/authRoutes");
 
@@ -21,6 +23,7 @@ app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
+app.use(errorHandler)
 
 const port = process.env.PORT || 9500;
 
